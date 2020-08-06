@@ -1,8 +1,8 @@
 server {
+	listen 443 ssl;
+	listen [::]:443 ssl;
 	listen 80 default_server;
 	listen [::]:80 default_server;
-	listen 443 ssl default_server;
-	listen [::]:443 ssl default_server;
 
 	root /var/www/html;
 
@@ -19,5 +19,4 @@ server {
 		include snippets/fastcgi-php.conf;
 		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
 	}
-
 }

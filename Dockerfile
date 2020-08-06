@@ -5,31 +5,51 @@
 #                                                     +:+ +:+         +:+      #
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/08/04 00:40:04 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/05 16:33:57 by adbenoit         ###   ########.fr        #
+#    Created: 2020/08/06 14:06:05 by adbenoit          #+#    #+#              #
+#    Updated: 2020/08/06 17:47:28 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FROM debian:buster
 
-COPY ./srcs/sh_unzip.sh init/
-COPY ./srcs/sh_run.sh init/
-COPY ./srcs/sh_ssl.sh init/
-COPY ./srcs/sh_default.sh init/
-COPY ./srcs/sh_onoff.sh init/
-COPY ./srcs/init_mysql.sql init/
-COPY ./srcs/index.htm init/
-COPY ./srcs/latest.tar.gz var/www/html/
-COPY ./srcs/phpmyadmin.tar var/www/html/
+ARG DOCUMENTROOT="/var/www/html"
+ARG NGINXROOT="/etc/nginx"
 
-COPY ./srcs/nginx.conf etc/nginx/nginx.conf
-COPY ./srcs/defaulton /etc/nginx/sites-available/default
-COPY ./srcs/defaulton init/
-COPY ./srcs/defaultoff init/
+# ---- NGINX ----
+RUN apt-get update && \
+	apt-get upgrade -y && \
+	apt-get install nginx -y
 
-RUN apt-get update && apt-get upgrade -y \
-&& apt-get install nginx default-mysql-server php php-mbstring php-fpm php-mysql openssl nano -y
+COPY ./srcs/nginx.conf ${NGINXROOT}/nginx.conf
+COPY ./srcs/default_on ${NGINXROOT}/sites-available/default
+COPY ./srcs/default_on /
+COPY ./srcs/default_off /
+# ---------------
 
-EXPOSE 80
-EXPOSE 443
-CMD bash init/sh_run.sh
+# ---- MYSQL ----
+RUN apt-get install -q -y mariadb-server
+
+COPY srcs/db/articles.sql /
+# ---------------
+
+# ----- PHP -----
+RUN apt-get install -q -y \
+	php-mysql \
+	php-mbstring \
+	php-fpm \
+	php openssl nano -y && \
+	rm -f ${DOCUMENTROOT}/index.html && \
+	apt-get autoclean -y
+
+COPY srcs/phpmyadmin.tar ${DOCUMENTROOT}
+COPY srcs/latest.tar.gz ${DOCUMENTROOT}
+COPY srcs/sh_unzip.sh /
+COPY srcs/app ${DOCUMENTROOT}
+# ---------------
+
+COPY srcs/sh_run.sh /
+EXPOSE 80 443
+
+WORKDIR ${DOCUMENTROOT}
+
+ENTRYPOINT bash /sh_run.sh
