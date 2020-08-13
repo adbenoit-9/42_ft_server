@@ -19,7 +19,7 @@
 ################################################################################
 
 # Config
-docker_destination="/goinfre/$USER/docker" #=> Select docker destination (goinfre is a good choice)
+docker_destination="/Applications/docker" #=> Select docker destination (goinfre is a good choice)
 
 ################################################################################
 
