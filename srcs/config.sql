@@ -1,3 +1,4 @@
-CREATE DATABASE user_database;
-GRANT ALL ON user_database.* TO 'user'@'localhost' IDENTIFIED BY 'password';
+CREATE DATABASE wordpress;
+CREATE USER username@localhost IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON wordpress.* TO username@localhost;
 FLUSH PRIVILEGES;
