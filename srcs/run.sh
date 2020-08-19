@@ -6,31 +6,43 @@
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/13 22:04:53 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/14 16:38:48 by adbenoit         ###   ########.fr        #
+#    Updated: 2020/08/19 20:50:06 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-cd /var/www/
-tar -xzvf latest.tar.gz
-rm -rf latest.tar.gz
-# cp /wordpress/wp-config-sample.php /wordpress/wp-config.php
+if [ $AUTOINDEX == "on" ]
+then
+	sed -i '11i\	autoindex on;' /etc/nginx/sites-available/default
+	rm -rf /var/www/html/index*
+fi
+
+cd /var/www/html
+tar -xzvf /tmp/latest.tar.gz
 chown -R www-data:www-data wordpress
-cd /
-unzip /tmp/phpmyadmin.zip
-mv phpMyAdmin-5.0.2-all-languages/ phpmyadmin
-rm /tmp/phpmyadmin.zip
+tar -xzvf /tmp/phpmyadmin.tar.gz
+rm /tmp/*
 chown -R www-data: phpmyadmin
 chmod -R 744 phpmyadmin
-cp phpmyadmin/config.sample.inc.php phpmyadmin/config.inc.php
-mv /config.inc.php /phpmyadmin/config.inc.php
-ln -s /phpmyadmin /var/www/html
-echo $'mysql init...'
+mv /config.inc.php phpmyadmin/config.inc.php
+cd /
+
+unlink /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
 service mysql start
-mysql -u root -p < config.sql
-echo $'php7.3-fpm init...'
+mysql -u root -pt < config.sql
+cp var/www/html/phpmyadmin/config.sample.inc.php var/www/html/phpmyadmin/config.inc.php
+echo -n $'[ ... ] Starting php7.3-fpm: php7.3-fpm ..'
 service php7.3-fpm start
-echo $'[ \033[32mok\033[0m ] Starting php7.3-fpm: php7.3-fpm ..'
-echo $'nginx init...'
+echo -e $'\r[ \033[32mok\033[0m ] Starting php7.3-fpm: php7.3-fpm'
+cd etc/nginx
+touch output.txt
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+	-newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' > output.txt
+rm output.txt
+cd /
+echo -e $'[ \033[32mok\033[0m ] Generating a RSA private key'
 service nginx start
+
 echo $'\033[34m'
 bash

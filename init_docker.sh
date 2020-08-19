@@ -32,12 +32,12 @@ reset=$'\033[0;39m'
 brew uninstall -f docker docker-compose docker-machine &>/dev/null ;:
 
 # Check if Docker is installed with MSC and open MSC if not
-if [ ! -d "/Applications/Docker.app" ] && [ ! -d "~/Applications/Docker.app" ]; then
-	echo "${blue}Please install ${cyan}Docker for Mac ${blue}from the MSC (Managed Software Center)${reset}"
-	open -a "Managed Software Center"
-	read -n1 -p "${blue}Press RETURN when you have successfully installed ${cyan}Docker for Mac${blue}...${reset}"
-	echo ""
-fi
+# if [ ! -d "/Applications/Docker.app" ] && [ ! -d "~/Applications/Docker.app" ]; then
+# 	echo "${blue}Please install ${cyan}Docker for Mac ${blue}from the MSC (Managed Software Center)${reset}"
+# 	open -a "Managed Software Center"
+# 	read -n1 -p "${blue}Press RETURN when you have successfully installed ${cyan}Docker for Mac${blue}...${reset}"
+# 	echo ""
+# fi
 
 # Kill Docker if started, so it doesn't create files during the process
 pkill Docker
