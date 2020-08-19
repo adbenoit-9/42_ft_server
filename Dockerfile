@@ -6,7 +6,7 @@
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/13 22:01:15 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/19 19:52:35 by adbenoit         ###   ########.fr        #
+#    Updated: 2020/08/19 20:52:56 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ RUN apt-get update -y && \
     php-mysql \
     sed \
     openssl \
-    # phpmyadmin \
     -y
 
 COPY srcs/run.sh /
