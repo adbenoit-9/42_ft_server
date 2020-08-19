@@ -6,7 +6,7 @@
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/13 22:04:53 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/19 20:50:06 by adbenoit         ###   ########.fr        #
+#    Updated: 2020/08/19 20:50:55 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,9 +36,8 @@ echo -n $'[ ... ] Starting php7.3-fpm: php7.3-fpm ..'
 service php7.3-fpm start
 echo -e $'\r[ \033[32mok\033[0m ] Starting php7.3-fpm: php7.3-fpm'
 cd etc/nginx
-touch output.txt
 openssl req -x509 -out localhost.crt -keyout localhost.key \
-	-newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' > output.txt
+	-newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost'
 rm output.txt
 cd /
 echo -e $'[ \033[32mok\033[0m ] Generating a RSA private key'
