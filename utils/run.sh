@@ -6,9 +6,9 @@
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/06 14:59:01 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/20 18:29:44 by adbenoit         ###   ########.fr        #
+#    Updated: 2020/08/20 21:11:01 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 docker build -t webserver .
-docker run -e AUTOINDEX="on" -p 80:80 -p 443:443 -ti webserver
+docker run -p 80:80 -p 443:443 -ti webserver
