@@ -6,7 +6,7 @@
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/13 22:01:15 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/20 18:26:47 by adbenoit         ###   ########.fr        #
+#    Updated: 2020/08/20 19:02:57 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,18 +30,16 @@ COPY srcs/phpmyadmin.tar.gz /tmp/
 COPY srcs/latest.tar.gz /tmp/
 COPY srcs/config.inc.php /
 
-RUN
-    if [ $AUTOINDEX == "on" ]
-    then
-	    sed -i '11i\	autoindex on;' /etc/nginx/sites-available/default
-	    rm -rf /var/www/html/index*
-    fi
+RUN \
+    if [ "$AUTOINDEX" = "on" ] ; then \
+	    sed -i '11i\	autoindex on;' /etc/nginx/sites-available/default \
+	    && rm -rf /var/www/html/index* ; fi
 
-RUN tar -xzvf /tmp/latest.tar.gz $ROOT/ \
+RUN tar -xzvf /tmp/latest.tar.gz -C $ROOT/ \
     && chown -R www-data:www-data $ROOT/wordpress \
-    && tar -xzvf /tmp/phpmyadmin.tar.gz $ROOT/ \
+    && tar -xzvf /tmp/phpmyadmin.tar.gz -C $ROOT/ \
     && rm /tmp/* \
-    && chown -R www-data: $ROOT/phpmyadmin \
+    && chown -R www-data: $ROOT/ \
     && chmod -R 744 $ROOT/phpmyadmin \
     && mv /config.inc.php $ROOT/phpmyadmin/config.inc.php \
     unlink /etc/nginx/sites-enabled/default \
