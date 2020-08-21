@@ -6,7 +6,7 @@
 #    By: adbenoit <adbenoit@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/13 22:01:15 by adbenoit          #+#    #+#              #
-#    Updated: 2020/08/20 21:07:55 by adbenoit         ###   ########.fr        #
+#    Updated: 2020/08/21 12:48:49 by adbenoit         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,17 +47,16 @@ RUN tar -xzvf /tmp/latest.tar.gz -C $ROOT/ \
     && service mysql start \
     && mysql -u root -pt < config.sql \
     && cp $ROOT/phpmyadmin/config.sample.inc.php $ROOT/phpmyadmin/config.inc.php \
-    # && echo -n $'[ ... ] Starting php7.3-fpm: php7.3-fpm ..' \
-    # && service php7.3-fpm start \
-    # && echo -e $'\r[ \033[32mok\033[0m ] Starting php7.3-fpm: php7.3-fpm' \
     && openssl req -x509 -out etc/nginx/localhost.crt \
         -keyout etc/nginx/localhost.key -newkey rsa:2048 -nodes -sha256 \
-        -subj '/CN=localhost'
-    # && echo -e $'[ \033[32mok\033[0m ] Generating a RSA private key' \
+        -subj '/CN=localhost' \
+    && echo '[ \033[32mok\033[0m ] Generating a RSA private key'
 
 EXPOSE 80 443
 
-ENTRYPOINT  service mysql start && \
-            service php7.3-fpm start && \
-            service nginx start \
+ENTRYPOINT  service mysql start \
+            && echo -n '[ ... ] Starting php7.3-fpm: php7.3-fpm ..' \
+            && service php7.3-fpm start \
+            && echo '\r[ \033[32mok\033[0m ] Starting php7.3-fpm: php7.3-fpm' \
+            && service nginx start \
             && bash
