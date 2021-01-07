@@ -11,4 +11,4 @@ Discover Docker and set up our first web server.
 #### On MacOS
 `sh utils/init_docker.sh`
 ### Execution
-`bash utils/run.sh`
+`sh utils/run.sh`
